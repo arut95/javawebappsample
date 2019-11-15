@@ -12,14 +12,9 @@ node {
     tool name: 'Maven 3.6.2', type: 'maven'
     checkout scm
   }
-  
-  environment {
-  PATH = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin:$PATH"
-  }
 
   stage('build') {
-    sh 'echo $PATH'
-    sh 'mvn clean package'
+    sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin/mvn clean package'
   }
   
   stage('deploy') {
