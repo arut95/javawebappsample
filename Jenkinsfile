@@ -18,6 +18,7 @@ node {
   }
 
   stage('build') {
+    sh 'echo $Path'
     sh 'mvn clean package'
   }
   
