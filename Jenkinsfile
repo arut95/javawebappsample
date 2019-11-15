@@ -14,7 +14,7 @@ node {
   }
   
   environment {
-  Path = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin:$Path"
+  PATH = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin:$PATH"
   }
 
   stage('build') {
