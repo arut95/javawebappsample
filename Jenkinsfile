@@ -13,7 +13,7 @@ node {
   }
 
   stage('build') {
-    sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin/mvn clean package'
+    sh 'mvn clean package'
   }
   
   stage('deploy') {
