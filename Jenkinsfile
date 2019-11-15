@@ -13,6 +13,10 @@ node {
     checkout scm
   }
   
+  environment {
+  Path = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven_3.6.2/bin:$Path"
+  }
+
   stage('build') {
     sh 'mvn clean package'
   }
