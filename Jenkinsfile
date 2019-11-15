@@ -10,7 +10,7 @@ def getFtpPublishProfile(def publishProfilesJson) {
 node {
   stage('init') {
     tool name: 'Maven 3.6.2', type: 'maven'
-    sh "printenv | sort"
+    sh 'printenv | sort'
     checkout scm
   }
   
