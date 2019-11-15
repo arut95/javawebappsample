@@ -14,7 +14,6 @@ node {
   }
   
   stage('build') {
-    sh 'printenv'
     sh 'mvn clean package'
   }
   
