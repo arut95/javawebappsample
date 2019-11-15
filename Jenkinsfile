@@ -9,7 +9,6 @@ def getFtpPublishProfile(def publishProfilesJson) {
 
 node {
   stage('init') {
-    tool name: 'Maven 3.6.2', type: 'maven'
     checkout scm
   }
 
