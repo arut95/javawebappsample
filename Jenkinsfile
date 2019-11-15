@@ -9,11 +9,19 @@ def getFtpPublishProfile(def publishProfilesJson) {
 
 node {
   stage('init') {
+    mvnHome = tool 'MVN3'
     checkout scm
   }
 
   stage('build') {
-    sh 'mvn clean package'
+        //Use MVN_Home to locate Maven
+    withEnv(["MVN_HOME=$mvnHome"]) {
+         if (isUnix()) {
+            sh '"$MVN_HOME/bin/mvn" clean package'
+         } else {
+            bat(/"%MVN_HOME%\bin\mvn" clean package/)
+         }
+      }
   }
   
   stage('deploy') {
