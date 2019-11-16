@@ -3,7 +3,7 @@ import groovy.json.JsonSlurper
 def getFtpPublishProfile(def publishProfilesJson) {
   def pubProfiles = new JsonSlurper().parseText(publishProfilesJson)
   for (p in pubProfiles)
-    if (p['publishMethod'] == 'FTP')
+    if (p['publishMethod'] == 'MSDeploy')
       return [url: p.publishUrl, username: p.userName, password: p.userPWD]
 }
 
@@ -36,9 +36,9 @@ node {
     }
     // get publish settings
     def pubProfilesJson = sh script: "/usr/local/bin/az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
-    def ftpProfile = getFtpPublishProfile pubProfilesJson
+    def deployProfile = getFtpPublishProfile pubProfilesJson
     // upload package
-    sh "curl -T target/calculator-1.0.war $ftpProfile.url/ROOT.war -u '$ftpProfile.username:$ftpProfile.password'"
+    sh "curl -x POST -u '$deployProfile.username:$deployProfile.password' https://$deployProfile.url/api/wardeploy --data-binary @target/calculator-1.0.war"
     // log out
     sh '/usr/local/bin/az logout'
   }
