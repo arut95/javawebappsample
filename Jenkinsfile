@@ -38,7 +38,7 @@ node {
     def pubProfilesJson = sh script: "/usr/local/bin/az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
     def deployProfile = getFtpPublishProfile pubProfilesJson
     // upload package
-    sh "curl -x POST -u '$deployProfile.username:$deployProfile.password' https://$deployProfile.url/api/wardeploy --data-binary @target/calculator-1.0.war"
+    sh "curl -X POST -u '$deployProfile.username:$deployProfile.password' https://$deployProfile.url/api/wardeploy --data-binary @target/calculator-1.0.war"
     // log out
     sh '/usr/local/bin/az logout'
   }
