@@ -7,6 +7,7 @@ def getAcrLoginServer(def acrSettingsJson) {
 
 node {
   stage('init') {
+    mvnHome = tool 'MVN3'
     checkout scm
   }
   
