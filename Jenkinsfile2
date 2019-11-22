@@ -28,7 +28,7 @@ node {
     def acrName = 'acr4prodsplats'
     def imageName = 'calculator'
     // generate version, it's important to remove the trailing new line in git describe output
-    def version = sh script: 'git describe | tr -d "\n"', returnStdout: true
+    def version = '1' //sh script: 'git describe | tr -d "\n"', returnStdout: true
     withCredentials([azureServicePrincipal('AzureAppServiceCred4DockerJava002')]) {
       // login Azure
       sh '''
