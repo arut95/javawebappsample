@@ -11,7 +11,14 @@ node {
   }
   
   stage('build') {
-    sh 'mvn clean package'
+    //Use MVN_Home to locate Maven
+    withEnv(["MVN_HOME=$mvnHome"]) {
+         if (isUnix()) {
+            sh '"$MVN_HOME/bin/mvn" clean package'
+         } else {
+            bat(/"%MVN_HOME%\bin\mvn" clean package/)
+         }
+      }
   }
   
   stage('deploy') {
@@ -24,11 +31,11 @@ node {
     withCredentials([azureServicePrincipal('AzureAppServiceCred4DockerJava002')]) {
       // login Azure
       sh '''
-        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-        az account set -s $AZURE_SUBSCRIPTION_ID
+        /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+        /usr/local/bin/az account set -s $AZURE_SUBSCRIPTION_ID
       '''
       // get login server
-      def acrSettingsJson = sh script: "az acr show -n $acrName", returnStdout: true
+      def acrSettingsJson = sh script: "/usr/local/bin/az acr show -n $acrName", returnStdout: true
       def loginServer = getAcrLoginServer acrSettingsJson
       // login docker
       // docker.withRegistry only supports credential ID, so use native docker command to login
@@ -40,9 +47,9 @@ node {
       // push image
       image.push()
       // update web app docker settings
-      sh "az webapp config container set -g $webAppResourceGroup -n $webAppName -c $imageWithTag -r http://$loginServer -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET"
+      sh "/usr/local/bin/az webapp config container set -g $webAppResourceGroup -n $webAppName -c $imageWithTag -r http://$loginServer -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET"
       // log out
-      sh 'az logout'
+      sh '/usr/local/bin/az logout'
       sh "docker logout $loginServer"
     }
   }
