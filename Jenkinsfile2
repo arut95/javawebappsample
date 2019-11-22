@@ -15,13 +15,13 @@ node {
   }
   
   stage('deploy') {
-    def webAppResourceGroup = '<myResourceGroup>'
-    def webAppName = '<app_name>'
-    def acrName = '<myRegistry>'
+    def webAppResourceGroup = 'RG-ProdsPlats-Java'
+    def webAppName = 'JavaAppDocker400'
+    def acrName = 'acr4prodsplats'
     def imageName = 'calculator'
     // generate version, it's important to remove the trailing new line in git describe output
     def version = sh script: 'git describe | tr -d "\n"', returnStdout: true
-    withCredentials([azureServicePrincipal('<mySrvPrincipal>')]) {
+    withCredentials([azureServicePrincipal('AzureAppServiceCred4DockerJava002')]) {
       // login Azure
       sh '''
         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
