@@ -37,7 +37,9 @@ node {
       '''
       // get login server
       def acrSettingsJson = sh script: "/usr/local/bin/az acr show -n $acrName", returnStdout: true
+      echo 'acrSettingsJson ${acrSettingsJson}'
       def loginServer = getAcrLoginServer acrSettingsJson
+      echo 'loginServer ${loginServer}'
       // login docker
       // docker.withRegistry only supports credential ID, so use native docker command to login
       // you can also use docker.withRegistry if you add a credential
