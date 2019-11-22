@@ -37,13 +37,15 @@ node {
       '''
       // get login server
       def acrSettingsJson = sh script: "/usr/local/bin/az acr show -n $acrName", returnStdout: true
-      echo 'acrSettingsJson ${acrSettingsJson}'
+      
       def loginServer = getAcrLoginServer acrSettingsJson
-      echo 'loginServer ${loginServer}'
+      
       // login docker
       // docker.withRegistry only supports credential ID, so use native docker command to login
       // you can also use docker.withRegistry if you add a credential
-      sh "/usr/local/bin/docker login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET $loginServer"
+      withCredentials([usernamePassword(credentialsId: 'acrLogin', passwordVariable: 'acrPassword', usernameVariable: 'acrUserName')]) {
+        sh "/usr/local/bin/docker login -u $acrUserName -p $acrPassword $loginServer"
+        }
       // build image
       def imageWithTag = "$loginServer/$imageName:$version"
       def image = docker.build imageWithTag
