@@ -29,7 +29,7 @@ node {
     def imageName = 'calculator'
     // generate version, it's important to remove the trailing new line in git describe output
     def version = '1' //sh script: 'git describe | tr -d "\n"', returnStdout: true
-    withCredentials([azureServicePrincipal('AzureAppServiceCred4DockerJava002')]) {
+    withCredentials([azureServicePrincipal('AzureAppServiceCred4Java001')]) {
       // login Azure
       sh '''
         /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
