@@ -30,7 +30,7 @@ node {
     // login Azure
     withCredentials([azureServicePrincipal('AzureAppServiceCred4Java001')]) {
       sh '''
-        /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+        /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID --allow-no-subscription
         /usr/local/bin/az account set -s $AZURE_SUBSCRIPTION_ID
       '''
     }
