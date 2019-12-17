@@ -25,7 +25,7 @@ node {
   }
   
   stage('deploy') {
-    def resourceGroup = 'RG-ProdsPlats-Java' 
+    def resourceGroup = 'RGProdsPlats' 
     def webAppName = 'JavaApp400pm'
     // login Azure
     withCredentials([azureServicePrincipal('AzureAppServiceCred4Java001')]) {
