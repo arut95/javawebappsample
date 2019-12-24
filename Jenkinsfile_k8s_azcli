@@ -32,11 +32,11 @@ node {
     withCredentials([azureServicePrincipal('JavaK8sCred001')]) {
       // login Azure
       sh '''
-        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
-        az account set -s $AZURE_SUBSCRIPTION_ID
+        /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
+        /usr/local/bin/az account set -s $AZURE_SUBSCRIPTION_ID
       '''
       // get login server
-      //**def acrSettingsJson = sh script: "az acr show -n $dockerHub", returnStdout: true
+      //**def acrSettingsJson = sh script: "/usr/local/bin/az acr show -n $dockerHub", returnStdout: true
       //**def loginServer = getAcrLoginServer acrSettingsJson
       // login docker
       // docker.withRegistry only supports credential ID, so use native docker command to login
@@ -59,7 +59,7 @@ node {
       // update deployment
       sh 'kubectl apply -f target/deployment.yaml'
       // log out
-      sh 'az logout'
+      sh '/usr/local/bin/az logout'
       sh "docker logout $loginServer"
     }
   }
