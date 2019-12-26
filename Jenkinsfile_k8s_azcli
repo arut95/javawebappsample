@@ -40,7 +40,9 @@ node {
       script {
                     echo 'Start - Build and push image with Jenkins docker-plugin'
                     withDockerServer([uri: "127.0.0.1:4243"]) {
+                      echo 'withdockerServer'
                         withDockerRegistry([credentialsId: 'DockerRegistryLoginMadhu', url: "https://harbor.dev.cloudsprint.io"]) {
+                            echo 'withDockerRegistry.'
                             // we give the image the same version as the .war package
                             def image = docker.build("harbor.dev.cloudsprint.io/calculator", "--build-arg PACKAGE_VERSION=1.1 ./")
                             image.push()
@@ -49,7 +51,7 @@ node {
                     }
                 }
       
-      sh "docker login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET $loginServer"
+      //sh "docker login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET $loginServer"
       // build image
       def imageWithTag = "$loginServer/$imageName:$version"
       def image = docker.build imageWithTag
