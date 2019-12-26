@@ -10,6 +10,7 @@ def getFtpPublishProfile(def publishProfilesJson) {
 node {
   stage('init') {
     mvnHome = tool 'MVN3'
+    sh 'echo scm.userRemoteConfigs[0].url'
     checkout scm
   }
 
