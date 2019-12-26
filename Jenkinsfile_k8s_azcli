@@ -37,19 +37,18 @@ node {
         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID
         az account set -s $AZURE_SUBSCRIPTION_ID
       '''
-      // get login server
-      //**def acrSettingsJson = sh script: "/usr/local/bin/az acr show -n $dockerHub", returnStdout: true
-      //**def loginServer = getAcrLoginServer acrSettingsJson
-      // login docker
-      // docker.withRegistry only supports credential ID, so use native docker command to login
-      // you can also use docker.withRegistry if you add a credential
-      docker.withRegistry('https://harbor.dev.cloudsprint.io', 'DockerRegistryLoginMadhu') {
-
-        def customImage = docker.build("my-image:${env.BUILD_ID}")
-
-        /* Push the container to the custom Registry */
-        customImage.push()
-    }
+      script {
+                    echo 'Start - Build and push image with Jenkins docker-plugin'
+                    withDockerServer([uri: "127.0.0.1:4243"]) {
+                        withDockerRegistry([credentialsId: 'DockerRegistryLoginMadhu', url: "https://harbor.dev.cloudsprint.io"]) {
+                            // we give the image the same version as the .war package
+                            def image = docker.build("harbor.dev.cloudsprint.io/calculator", "--build-arg PACKAGE_VERSION=1.1 ./")
+                            image.push()
+                            echo 'Done pushing the image.'
+                        }
+                    }
+                }
+      
       sh "docker login -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET $loginServer"
       // build image
       def imageWithTag = "$loginServer/$imageName:$version"
