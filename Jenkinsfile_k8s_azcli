@@ -29,6 +29,7 @@ node {
     def imageName = 'calculator'
     // generate version, it's important to remove the trailing new line in git describe output
     def version = sh script: 'git describe | tr -d "\n"', returnStdout: true
+    sh "echo $version"
     sh "echo 'build completed'"
     withCredentials([azureServicePrincipal('JavaK8sCred001')]) {
       // login Azure
@@ -44,7 +45,7 @@ node {
                         withDockerRegistry([credentialsId: 'DockerRegistryLoginMadhu', url: "https://harbor.dev.cloudsprint.io"]) {
                             echo 'withDockerRegistry.'
                             // we give the image the same version as the .war package
-                            def image = docker.build("harbor.dev.cloudsprint.io/calculator", "--build-arg PACKAGE_VERSION=1.1 ./")
+                            def image = docker.build("harbor.dev.cloudsprint.io/$imageName", "--build-arg PACKAGE_VERSION=1.1 ./")
                             image.push()
                             echo 'Done pushing the image.'
                         }
