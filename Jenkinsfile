@@ -29,14 +29,14 @@ node {
     def resourceGroup = 'RGProdsPlats' 
     def webAppName = 'JavaApp400pm'
     // login Azure
-    withCredentials([azureServicePrincipal('JavaAppAdminSecret4Java')]) {
+    withCredentials([azureServicePrincipal('JavaAppAdminCred4Java')]) {
       sh '''
         az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID 
         az account set -s $AZURE_SUBSCRIPTION_ID
       '''
     }
     // get publish settings
-    def pubProfilesJson = sh script: "/usr/local/bin/az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
+    def pubProfilesJson = sh script: "az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
     def deployProfile = getFtpPublishProfile pubProfilesJson
     def deployAppName = "JavaApp400pm.war"
     // upload package
