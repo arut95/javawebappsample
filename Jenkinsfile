@@ -10,8 +10,8 @@ def getFtpPublishProfile(def publishProfilesJson) {
 node {
   stage('init') {
     mvnHome = tool 'MVN3'
-    sh 'echo scm.userRemoteConfigs[0].url'
-    checkout scm
+    def gitRepo = 'https://github.com/madhubalakrishnan/javawebappsample.git'
+    git "$gitRepo"
   }
 
   stage('build') {
@@ -29,18 +29,19 @@ node {
     def resourceGroup = 'RGProdsPlats' 
     def webAppName = 'JavaApp400pm'
     // login Azure
-    withCredentials([azureServicePrincipal('AzureAppServiceCred4Java001')]) {
+    withCredentials([azureServicePrincipal('JavaAppAdminSecret4Java')]) {
       sh '''
-        /usr/local/bin/az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID --allow-no-subscription
-        /usr/local/bin/az account set -s $AZURE_SUBSCRIPTION_ID
+        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID 
+        az account set -s $AZURE_SUBSCRIPTION_ID
       '''
     }
     // get publish settings
     def pubProfilesJson = sh script: "/usr/local/bin/az webapp deployment list-publishing-profiles -g $resourceGroup -n $webAppName", returnStdout: true
     def deployProfile = getFtpPublishProfile pubProfilesJson
+    def deployAppName = "JavaApp400pm.war"
     // upload package
-    sh "curl -X POST -u '$deployProfile.username:$deployProfile.password' https://$deployProfile.url/api/wardeploy --data-binary @target/calculator-1.0.war"
+    sh "curl -X POST -u '$deployProfile.username:$deployProfile.password' https://$deployProfile.url/api/wardeploy --data-binary @target/$deployAppName"
     // log out
-    sh '/usr/local/bin/az logout'
+    sh 'az logout'
   }
 }
