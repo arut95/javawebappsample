@@ -10,7 +10,7 @@ def getFtpPublishProfile(def publishProfilesJson) {
 node {
   stage('init') {
     mvnHome = tool 'MVN3'
-    def gitRepo = 'https://github.com/madhubalakrishnan/javawebappsample.git'
+    def gitRepo = 'https://github.com/arut95/javawebappsample.git'
     git "$gitRepo"
   }
 
