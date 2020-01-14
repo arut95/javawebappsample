@@ -1,0 +1,8 @@
+---
+applications:
+- name: javawebappsample
+  memory: 1G
+  instances: 1
+  host: javawebappsample
+  path: target/calculator-1.0.war
+  disk_quota: 1G
